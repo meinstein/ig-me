@@ -54,9 +54,12 @@ function writeFile(filepath, content) {
   })
 }
 
-const generateData = async () => {
+async function generateData() {
+  // point our script at the photos directory from the IG data dump
+  // we will assume that it's at the root of the dir
   const photosPath = path.join(__dirname, 'photos')
-  const jsonPath = path.join(__dirname, 'photoData.json')
+  // add data to src directory
+  const jsonPath = path.join(__dirname, 'src', 'photoData.json')
   // get all the photo dirs
   const photos = getDirectories(photosPath)
   // process each dir in parallel
