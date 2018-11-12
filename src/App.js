@@ -1,21 +1,31 @@
 import React, { Component } from 'react'
+import uniqBy from 'lodash/uniqBy'
 
 import photoData from './photoData.json'
 import { PHOTO_HEIGHT, TOP_MARGIN, HEADER_HEIGHT } from './enums'
 import Image from './Image'
 
+photoData.sort((a, b) => parseInt(b.dir) - parseInt(a.dir))
+
 class App extends Component {
   constructor(props) {
     super(props)
     this.state = {
-      activeThing: { id: [], ratio: 0 },
+      activeThing: { id: [], ratio: 0, date: null },
       activeIds: [],
-      docHeight: photoData.length * (PHOTO_HEIGHT + TOP_MARGIN) + HEADER_HEIGHT,
-      data: photoData
+      docHeight: photoData.length * (PHOTO_HEIGHT + TOP_MARGIN) + HEADER_HEIGHT
     }
+
+    const parseDate = dir => {
+      const [year, month] = [dir.slice(0, 4), dir.slice(4)]
+      return `${month} - ${year}`
+    }
+
+    this.buckets = uniqBy(photoData, 'dir').map(({ dir }) => parseDate(dir))
     this.rootRef = React.createRef()
-    this.singleRefs = this.state.data.reduce((acc, value) => {
+    this.singleRefs = photoData.reduce((acc, value) => {
       acc[value.file] = {
+        date: parseDate(value.dir),
         id: value.file,
         ref: React.createRef(),
         ratio: 0
@@ -31,13 +41,15 @@ class App extends Component {
       )
 
       if (activeThing.ratio > this.state.activeThing.ratio) {
-        if (!this.state.activeIds.includes(activeThing.id)) {
-          this.setState(prevState => ({
+        this.setState(prevState => {
+          return {
             ...prevState,
             activeThing,
-            activeIds: [...prevState.activeIds, activeThing.id]
-          }))
-        }
+            activeIds: prevState.activeIds.includes(activeThing.id)
+              ? prevState.activeIds
+              : [...prevState.activeIds, activeThing.id]
+          }
+        })
       }
     }
 
@@ -54,9 +66,29 @@ class App extends Component {
   render() {
     return (
       <div style={{ height: this.state.docHeight, display: 'flex', justifyContent: 'center' }}>
-        <header style={{ height: HEADER_HEIGHT }}>header</header>
-        <div ref={this.rootRef}>
-          {this.state.data.map((image, idx) => {
+        <div style={{ flex: 1 }}>
+          <div
+            style={{
+              position: 'fixed',
+              display: 'flex',
+              flexDirection: 'column',
+              height: 'calc(100vh - 24px)',
+              marginLeft: 12,
+              marginTop: 12,
+              marginRight: 12
+            }}
+          >
+            {this.buckets.map((bucket, idx) => {
+              return (
+                <span key={idx} style={{ flex: 1, fontWeight: this.state.activeThing.date === bucket ? 700 : 400 }}>
+                  {bucket}
+                </span>
+              )
+            })}
+          </div>
+        </div>
+        <div style={{ flex: 1 }} ref={this.rootRef}>
+          {photoData.map((image, idx) => {
             return (
               <Image
                 key={idx}
@@ -68,6 +100,7 @@ class App extends Component {
             )
           })}
         </div>
+        <div style={{ flex: 1 }} />
       </div>
     )
   }
