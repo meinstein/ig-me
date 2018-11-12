@@ -75,13 +75,16 @@ class App extends Component {
               height: 'calc(100vh - 24px)',
               marginLeft: 12,
               marginTop: 12,
-              marginRight: 12
+              marginBottom: 12
             }}
           >
             {this.buckets.map((bucket, idx) => {
               return (
-                <span key={idx} style={{ flex: 1, fontWeight: this.state.activeThing.date === bucket ? 700 : 400 }}>
-                  {bucket}
+                <span
+                  key={idx}
+                  style={{ flex: 1, fontSize: 12, fontWeight: this.state.activeThing.date === bucket ? 700 : 400 }}
+                >
+                  {bucket} {this.state.activeThing.date === bucket && '◀'}
                 </span>
               )
             })}
@@ -100,7 +103,25 @@ class App extends Component {
             )
           })}
         </div>
-        <div style={{ flex: 1 }} />
+        <div
+          style={{
+            display: 'flex',
+            flexGrow: 1,
+            justifyContent: 'flex-end',
+            marginTop: 12,
+            marginRight: 12
+          }}
+        >
+          <span
+            style={{
+              position: 'fixed',
+              fontWeight: 700,
+              fontSize: 12
+            }}
+          >
+            IG-ME
+          </span>
+        </div>
       </div>
     )
   }
