@@ -18,6 +18,18 @@ npm run gen:data
 
 Running the above script adds a `data.json` file to the root of the project.
 
+## Deployment
+
+Using GitHub Pages, which is currently being built from the master branch.
+
+```
+npm run deploy
+```
+
+## Images
+
+Images are hosted on Google Cloud. See `enums` file for base path / exact location of those assets.
+
 ## Credit
 
 This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
