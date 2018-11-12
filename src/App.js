@@ -1,7 +1,8 @@
 import React, { Component } from 'react'
 
 import photoData from './photoData.json'
-import { BASE_URL, PHOTO_HEIGHT, TOP_MARGIN, HEADER_HEIGHT } from './enums'
+import { PHOTO_HEIGHT, TOP_MARGIN, HEADER_HEIGHT } from './enums'
+import Image from './Image'
 
 class App extends Component {
   constructor(props) {
@@ -55,32 +56,15 @@ class App extends Component {
       <div style={{ height: this.state.docHeight, display: 'flex', justifyContent: 'center' }}>
         <header style={{ height: HEADER_HEIGHT }}>header</header>
         <div ref={this.rootRef}>
-          {this.state.data.map((img, idx) => {
+          {this.state.data.map((image, idx) => {
             return (
-              <div
+              <Image
                 key={idx}
-                ref={this.singleRefs[img.file].ref}
-                id={this.singleRefs[img.file].id}
-                style={{
-                  height: PHOTO_HEIGHT,
-                  width: 500,
-                  marginTop: TOP_MARGIN,
-                  backgroundColor: img.colors[0],
-                  borderRadius: 3
-                }}
-              >
-                {this.state.activeIds.includes(img.file) && (
-                  <img
-                    src={`${BASE_URL}/${img.dir}/${img.file}`}
-                    alt="img"
-                    style={{
-                      width: 500,
-                      height: PHOTO_HEIGHT,
-                      borderRadius: 3
-                    }}
-                  />
-                )}
-              </div>
+                ref={this.singleRefs[image.file].ref}
+                id={this.singleRefs[image.file].id}
+                activeIds={this.state.activeIds}
+                image={image}
+              />
             )
           })}
         </div>

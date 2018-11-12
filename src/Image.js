@@ -3,50 +3,42 @@ import React from 'react'
 import { BASE_URL, PHOTO_HEIGHT, TOP_MARGIN } from './enums'
 
 class Image extends React.Component {
-  constructor() {
-    super()
-    this._container = React.createRef()
+  constructor(props) {
+    super(props)
     this.state = {
-      isCentered: false
+      hasImageLoaded: false
     }
+    this.img = React.createRef()
   }
 
   componentDidMount() {
-    var options = {
-      root: null,
-      rootMargin: '0px',
-      threshold: 1.0
+    if (this.img.current && this.img.current.complete) {
+      this.setState({ hasImageLoaded: true })
     }
-    console.log(this._container)
-    const observer = new IntersectionObserver(() => this.setState({ isCentered: true }), options)
-    observer.observe(this._container.current)
   }
 
   render() {
-    const { colors, dir, file } = this.props
+    const { image, activeIds, id, forwardedRef } = this.props
     return (
       <div
-        ref={this._container}
+        ref={forwardedRef}
+        id={id}
         style={{
-          marginLeft: Math.random() * 100,
           height: PHOTO_HEIGHT,
           width: 500,
           marginTop: TOP_MARGIN,
-          backgroundColor: colors[0],
-          border: `3px solid ${colors[1]}`,
-          borderRadius: 3,
-          transition: 'all 750ms ease'
+          backgroundColor: image.colors[0],
+          borderRadius: 3
         }}
       >
-        {this.state.isCentered && (
+        {activeIds.includes(image.file) && (
           <img
-            src={`${BASE_URL}/${dir}/${file}`}
+            ref={this.img}
+            className={this.state.hasImageLoaded ? 'fade-in-card' : 'hidden-card'}
+            onLoad={() => this.setState({ hasImageLoaded: true })}
+            src={`${BASE_URL}/${image.dir}/${image.file}`}
             alt="img"
-            style={{
-              width: 500,
-              height: PHOTO_HEIGHT,
-              borderRadius: 3
-            }}
+            style={{ width: 500, height: PHOTO_HEIGHT, borderRadius: 3 }}
           />
         )}
       </div>
@@ -54,4 +46,4 @@ class Image extends React.Component {
   }
 }
 
-export default Image
+export default React.forwardRef((props, ref) => <Image forwardedRef={ref} {...props} />)
