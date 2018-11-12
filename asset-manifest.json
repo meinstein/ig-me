@@ -1,0 +1,13 @@
+{
+  "main.css": "/ig-me/static/css/main.8c965f93.chunk.css",
+  "main.js": "/ig-me/static/js/main.17fdd205.chunk.js",
+  "main.js.map": "/ig-me/static/js/main.17fdd205.chunk.js.map",
+  "static/js/1.8b16a83d.chunk.js": "/ig-me/static/js/1.8b16a83d.chunk.js",
+  "static/js/1.8b16a83d.chunk.js.map": "/ig-me/static/js/1.8b16a83d.chunk.js.map",
+  "runtime~main.js": "/ig-me/static/js/runtime~main.db7ff069.js",
+  "runtime~main.js.map": "/ig-me/static/js/runtime~main.db7ff069.js.map",
+  "static/css/main.8c965f93.chunk.css.map": "/ig-me/static/css/main.8c965f93.chunk.css.map",
+  "index.html": "/ig-me/index.html",
+  "precache-manifest.e66a3b2007903cdb06598ecbd470d91b.js": "/ig-me/precache-manifest.e66a3b2007903cdb06598ecbd470d91b.js",
+  "service-worker.js": "/ig-me/service-worker.js"
+}
