@@ -1,12 +1,18 @@
 import React, { Component } from 'react'
 import uniqBy from 'lodash/uniqBy'
+import groupBy from 'lodash/groupBy'
 
 import photoData from './photoData.json'
 import { PHOTO_HEIGHT, TOP_MARGIN, HEADER_HEIGHT } from './enums'
 import Image from './Image'
 
 photoData.sort((a, b) => parseInt(b.dir) - parseInt(a.dir))
+const groupedData = groupBy(photoData, photo => photo.dir)
 
+const parseDate = dir => {
+  const [year, month] = [dir.slice(0, 4), dir.slice(4)]
+  return `${month} - ${year}`
+}
 class App extends Component {
   constructor(props) {
     super(props)
@@ -14,11 +20,6 @@ class App extends Component {
       activeThing: { id: [], ratio: 0, date: null },
       activeIds: [],
       docHeight: photoData.length * (PHOTO_HEIGHT + TOP_MARGIN) + HEADER_HEIGHT
-    }
-
-    const parseDate = dir => {
-      const [year, month] = [dir.slice(0, 4), dir.slice(4)]
-      return `${month} - ${year}`
     }
 
     this.buckets = uniqBy(photoData, 'dir').map(({ dir }) => parseDate(dir))
@@ -73,54 +74,56 @@ class App extends Component {
               display: 'flex',
               flexDirection: 'column',
               height: 'calc(100vh - 24px)',
-              marginLeft: 12,
+              marginLeft: 16,
               marginTop: 12,
               marginBottom: 12
             }}
           >
             {this.buckets.map((bucket, idx) => {
               return (
-                <span
+                <a
+                  href={`#${bucket}`}
                   key={idx}
-                  style={{ flex: 1, fontSize: 12, fontWeight: this.state.activeThing.date === bucket ? 700 : 400 }}
+                  style={{
+                    flex: 1,
+                    fontSize: 12,
+                    color: this.state.activeThing.date === bucket ? 'black' : 'gray',
+                    fontWeight: this.state.activeThing.date === bucket ? 700 : 400,
+                    textDecoration: 'underline'
+                  }}
                 >
-                  {bucket} {this.state.activeThing.date === bucket && '◀'}
-                </span>
+                  {bucket}
+                </a>
               )
             })}
           </div>
         </div>
         <div style={{ flex: 1 }} ref={this.rootRef}>
-          {photoData.map((image, idx) => {
+          {this.buckets.map(month => {
             return (
-              <Image
-                key={idx}
-                ref={this.singleRefs[image.file].ref}
-                id={this.singleRefs[image.file].id}
-                activeIds={this.state.activeIds}
-                image={image}
-              />
+              <div id={month}>
+                {groupedData[
+                  month
+                    .split(' - ')
+                    .reverse()
+                    .join('')
+                ].map((image, idx) => {
+                  return (
+                    <Image
+                      key={idx}
+                      ref={this.singleRefs[image.file].ref}
+                      id={this.singleRefs[image.file].id}
+                      activeIds={this.state.activeIds}
+                      image={image}
+                    />
+                  )
+                })}
+              </div>
             )
           })}
         </div>
-        <div
-          style={{
-            display: 'flex',
-            flexGrow: 1,
-            justifyContent: 'flex-end',
-            marginTop: 12,
-            marginRight: 12
-          }}
-        >
-          <span
-            style={{
-              position: 'fixed',
-              fontWeight: 700,
-              fontSize: 12
-            }}
-          >
-            IG-ME
-          </span>
+        <div style={{ display: 'flex', flexGrow: 1, justifyContent: 'flex-end', marginTop: 12, marginRight: 16 }}>
+          <span style={{ position: 'fixed', fontWeight: 700, fontSize: 12 }}>IG-ME</span>
         </div>
       </div>
     )
