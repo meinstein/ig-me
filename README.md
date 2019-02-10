@@ -20,7 +20,7 @@ Running the above script adds a `data.json` file to the root of the project.
 
 ## Deployment
 
-Using GitHub Pages, which is currently being built from the master branch.
+Using GitHub Pages, which is currently being built from `master`.
 
 ```
 npm run deploy
